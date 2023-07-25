@@ -1,5 +1,6 @@
 import korlibs.korge.gradle.*
 
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
 	alias(libs.plugins.korge)
 }
@@ -20,7 +21,7 @@ korge {
 	targetJs()
 	targetDesktop()
 	targetIos()
-	targetAndroid()
+    targetAndroid()
 
 	serializationJson()
 }

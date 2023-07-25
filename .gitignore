@@ -14,5 +14,4 @@ src/main/*
 
 
 # Project exclude paths
-/gradle/wrapper/
 /kotlin-js-store/
