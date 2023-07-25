@@ -1,35 +1,30 @@
-import korlibs.time.*
+import Scenes.*
+import korlibs.image.color.*
 import korlibs.korge.*
 import korlibs.korge.scene.*
-import korlibs.korge.tween.*
-import korlibs.korge.view.*
-import korlibs.image.color.*
-import korlibs.image.format.*
-import korlibs.io.file.std.*
 import korlibs.math.geom.*
-import korlibs.math.interpolation.*
+import korlibs.render.*
 
-suspend fun main() = Korge(windowSize = Size(512, 512), backgroundColor = Colors["#2b2b2b"]) {
-	val sceneContainer = sceneContainer()
+suspend fun main() = Korge(
+    virtualSize = Size(1080, 1920),
+    windowSize = Size(720, 1080),
+    backgroundColor = Colors["#2b2b2b"],
+    displayMode = KorgeDisplayMode(
+        scaleMode = ScaleMode.FIT,
+        scaleAnchor = Anchor.MIDDLE_CENTER,
+        clipBorders = true
+    ),
+    quality = GameWindow.Quality.AUTOMATIC,
+    forceRenderEveryFrame = true
+){
 
-	sceneContainer.changeTo{ MyScene() }
+    injector.apply {
+        mapSingleton { RootScene() }
+    }
+
+    sceneContainer{
+        changeTo<RootScene>()
+    }
 }
 
-class MyScene : Scene() {
-	override suspend fun SContainer.sceneMain() {
-		val minDegrees = (-16).degrees
-		val maxDegrees = (+16).degrees
 
-		val image = image(resourcesVfs["korge.png"].readBitmap()) {
-			rotation = maxDegrees
-			anchor(.5, .5)
-			scale(0.8)
-			position(256, 256)
-		}
-
-		while (true) {
-			image.tween(image::rotation[minDegrees], time = 1.seconds, easing = Easing.EASE_IN_OUT)
-			image.tween(image::rotation[maxDegrees], time = 1.seconds, easing = Easing.EASE_IN_OUT)
-		}
-	}
-}
