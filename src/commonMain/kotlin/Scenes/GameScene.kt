@@ -1,34 +1,58 @@
 package Scenes
 
 import com.github.quillraven.fleks.*
+import korlibs.image.color.*
+import korlibs.korge.annotations.*
+import korlibs.korge.input.*
 import korlibs.korge.scene.*
 import korlibs.korge.view.*
+import korlibs.korge.view.align.*
 import korlibs.math.geom.*
+import ui.*
 
-class RootScene : Scene() {
+
+class GameScene : Scene() {
+
     //private val assets = Assets()
     override suspend fun SContainer.sceneInit() {
         // load assets here and inject them into the world
     }
 
+    @OptIn(KorgeExperimental::class)
     override suspend fun SContainer.sceneMain() {
         container {
-            //scaleAvg = scaleFactor.toFloat() // TODO scaleAvg not needed?
+            // the main playground for rendering tiles
+            val playground = container {
+                // add elements or playground will have no width or height. Width and height are determined by the children
+                val background = solidRect(stage!!.width, stage!!.height, Colors.WHITE)
+                text("Playground Area", color = Colors.BLACK)
+            }
 
-            // Here are the container views which contain the generated entity objects with visible component "Sprite" attached to it
-            //
-            val playground = container() // layer0
-            // val layer1 = container() // Add more layers when needed - This will be on top of layer0
+            // Makes playground container draggable only on y
+            // TODO: add constraints
+            playground.draggable(autoMove = false) {
+                it.view.y = it.viewNextXY.y
+            }
+
+            // test topBar UI sections
+            val topBar = topBar(parent!!)
+
+            //align playground below topBar
+            playground.alignTopToBottomOf(topBar)
+
+            // shows local and global mouse position centered on the Y-Axis of the stage
+            val mouseCoords = text("0.0", color = Colors.RED).centerYOnStage()
+            mouseCoords.scale(3)
+            mouseCoords.addUpdater {
+                text = "mousepos \n Local: ${mouse.currentPosLocal} \n Global: ${mouse.currentPosGlobal}"
+            }
 
             // This is the world object of the entity component system (ECS)
             // It contains all ECS related system and component configuration
             val world = configureWorld(entityCapacity = 512) {
                 // Register external objects which are used by systems and component listeners
                 injectables {
-                    //add(assets)
-                    //add(width) // Assets are used by the SpriteSystem / SpriteListener to get the image data for drawing
-                    add("playground", playground)  // Currently, we use only one layer to draw all objects to - this is also used in SpriteListener to add the image to the layer container
-                    // inject("layer1", layer1)  // Add more layers when needed e.g. for explosion objects to be on top, etc.
+                    add("playground", playground)  // Currently, we use only one layer to draw all objects to
                 }
 
                 // Register component hooks which trigger actions when specific components are created
