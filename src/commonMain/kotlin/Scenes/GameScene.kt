@@ -1,39 +1,46 @@
-package Scenes
+package scenes
 
+import assets.*
 import com.github.quillraven.fleks.*
+import components.*
+import helper.*
 import korlibs.korge.scene.*
 import korlibs.korge.view.*
 import korlibs.math.geom.*
+import systems.*
 
-class RootScene : Scene() {
-    //private val assets = Assets()
+class GameScene : Scene() {
+    private val assets = Assets()
     override suspend fun SContainer.sceneInit() {
-        // load assets here and inject them into the world
+        // load assets here and inject them into the world in the injectables section inside the world down below
+        // create a config for all assets that have to be loaded
+        val config = Assets.Config(
+            images = listOf(
+                Pair("Firebug", "Firebug.json")
+            )
+        )
+        //load assets with config
+        assets.load(config)
     }
 
     override suspend fun SContainer.sceneMain() {
         container {
-            //scaleAvg = scaleFactor.toFloat() // TODO scaleAvg not needed?
-
             // Here are the container views which contain the generated entity objects with visible component "Sprite" attached to it
-            //
-            val playground = container() // layer0
-            // val layer1 = container() // Add more layers when needed - This will be on top of layer0
+            val playground = container()
+
 
             // This is the world object of the entity component system (ECS)
             // It contains all ECS related system and component configuration
             val world = configureWorld(entityCapacity = 512) {
                 // Register external objects which are used by systems and component listeners
                 injectables {
-                    //add(assets)
-                    //add(width) // Assets are used by the SpriteSystem / SpriteListener to get the image data for drawing
-                    add("playground", playground)  // Currently, we use only one layer to draw all objects to - this is also used in SpriteListener to add the image to the layer container
-                    // inject("layer1", layer1)  // Add more layers when needed e.g. for explosion objects to be on top, etc.
+                    add(assets)
+                    add("playground", playground)
                 }
 
                 // Register component hooks which trigger actions when specific components are created
                 components {
-
+                    onAdd(SpriteComponent, SpriteComponent.onComponentAdded)
                 }
 
                 // Register family hooks which trigger actions when specific entities (combination of components) are created
@@ -44,9 +51,23 @@ class RootScene : Scene() {
                 // Register all needed systems of the entity component system
                 // The order of systems here also define the order in which the systems are called inside Fleks ECS
                 systems {
-
+                    add(MoveSystem())
+                    add(SpriteSystem())
                     // Drawing images on screen should be last otherwise the position might be (0, 0) because it was not set before
                 }
+            }
+
+            // Enemy creation with fixed velocity
+            world.entity {
+                it += TransformComponent(
+                    position = Vector2D(300f, 200f)
+                )
+                it += SpriteComponent(
+                    imagePath = "Firebug"
+                )
+                it += VelocityComponent(
+                    direction = Vector2D(0f, 10f) //hardcoded velocity for now
+                )
             }
 
             // Run the update of the Fleks ECS - this will periodically call all update functions of the systems (e.g. onTick(), onTickEntity(), etc.)

@@ -1,13 +1,13 @@
-import Scenes.*
 import korlibs.image.color.*
 import korlibs.korge.*
 import korlibs.korge.scene.*
 import korlibs.math.geom.*
 import korlibs.render.*
+import scenes.*
 
 suspend fun main() = Korge(
-    virtualSize = Size(1080, 1920),
-    windowSize = Size(720, 1080),
+    virtualSize = Size(720f, 1080f),
+    windowSize = Size(720f, 1080f),
     backgroundColor = Colors["#2b2b2b"],
     displayMode = KorgeDisplayMode(
         scaleMode = ScaleMode.FIT,
@@ -15,16 +15,14 @@ suspend fun main() = Korge(
         clipBorders = true
     ),
     quality = GameWindow.Quality.AUTOMATIC,
-    forceRenderEveryFrame = true
+    forceRenderEveryFrame = true,
+    title = "Crawlers Keep",
+    gameId = "Crawlers Keep"
 ){
-
     injector.apply {
-        mapSingleton { RootScene() }
+        mapSingleton { GameScene() }
     }
-
     sceneContainer{
-        changeTo<RootScene>()
+        changeTo<GameScene>()
     }
 }
-
-
