@@ -1,6 +1,7 @@
 package Scenes
 
 import com.github.quillraven.fleks.*
+import com.github.quillraven.fleks.collection.*
 import korlibs.image.color.*
 import korlibs.korge.annotations.*
 import korlibs.korge.input.*
@@ -35,7 +36,7 @@ class GameScene : Scene() {
             }
 
             // test topBar UI sections
-            val topBar = topBar(parent!!)
+            val topBar = topBar(this)
 
             //align playground below topBar
             playground.alignTopToBottomOf(topBar)
@@ -71,6 +72,7 @@ class GameScene : Scene() {
 
                     // Drawing images on screen should be last otherwise the position might be (0, 0) because it was not set before
                 }
+
             }
 
             // Run the update of the Fleks ECS - this will periodically call all update functions of the systems (e.g. onTick(), onTickEntity(), etc.)

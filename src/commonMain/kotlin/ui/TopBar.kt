@@ -9,9 +9,9 @@ import korlibs.math.geom.*
 
 // inline function for adding the topBar to the container it is called in.
 inline fun Container.topBar(
-    myParent: View
-) = TopBar(myParent).addTo(this)
-class TopBar(myParent: View) : Container() {
+    targetC: View
+) = TopBar(targetC).addTo(this)
+class TopBar(targetC: View) : Container() {
     init {
         // sections for the left, middle, and right sides
         // width will be overridden
@@ -34,7 +34,7 @@ class TopBar(myParent: View) : Container() {
         // Position the bitmaps horizontally
         uiHorizontalFill{
             // set fill width or it won't actually fill horizontally
-            this.width = myParent.width
+            this.width = targetC.width
 
             // Place the sections in order
             this += leftSection
