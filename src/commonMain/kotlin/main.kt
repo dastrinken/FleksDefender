@@ -6,8 +6,8 @@ import korlibs.render.*
 import scenes.*
 
 suspend fun main() = Korge(
-    virtualSize = Size(720f, 1080f),
-    windowSize = Size(720f, 1080f),
+    virtualSize = Size(720f, 1280f),
+    windowSize = Size(720f, 1280f),
     backgroundColor = Colors["#2b2b2b"],
     displayMode = KorgeDisplayMode(
         scaleMode = ScaleMode.FIT,

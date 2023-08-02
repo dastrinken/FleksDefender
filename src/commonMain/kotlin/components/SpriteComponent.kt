@@ -1,7 +1,7 @@
 package components
 
-import assets.*
 import com.github.quillraven.fleks.*
+import helper.*
 import korlibs.korge.view.*
 import korlibs.time.*
 import systems.*
@@ -18,8 +18,8 @@ data class SpriteComponent(
     companion object : ComponentType<SpriteComponent>() {
         val onComponentAdded: ComponentHook<SpriteComponent> = { entity, component ->
             val playground = inject<Container>("playground")
-            val assets = inject<Assets>()
-            val atlas = assets.getAtlas(component.imagePath)
+            val atlasLoader = inject<AtlasLoader>()
+            val atlas = atlasLoader.getAtlas(component.imagePath)
 
             // Load animations for the given atlas
             component.animations[Direction.DOWN] = atlas.getSpriteAnimation(prefix = "Walk#Down", 100.milliseconds)
@@ -28,8 +28,10 @@ data class SpriteComponent(
             component.animations[Direction.RIGHT] = atlas.getSpriteAnimation(prefix = "Walk#Side", 100.milliseconds)
 
             //initial animation
-            component.currentAnimation = Sprite(component.animations[Direction.DOWN]!!)
-            component.currentAnimation?.addTo(playground)
+            val spriteAnim = Sprite(component.animations[Direction.DOWN]!!)
+            spriteAnim.playAnimationLooped()
+            spriteAnim.addTo(playground)
+            component.currentAnimation = spriteAnim
         }
     }
 }

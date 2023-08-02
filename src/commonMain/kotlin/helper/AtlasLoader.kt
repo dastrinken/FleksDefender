@@ -1,10 +1,10 @@
-package assets
+package helper
 
 import korlibs.image.atlas.*
 import korlibs.io.file.std.*
 import korlibs.time.*
 
-class Assets {
+class AtlasLoader {
 
     private val atlas: MutableMap<String, Atlas> = mutableMapOf()
 

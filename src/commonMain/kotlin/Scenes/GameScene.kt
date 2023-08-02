@@ -1,6 +1,5 @@
 package scenes
 
-import assets.*
 import com.github.quillraven.fleks.*
 import components.*
 import helper.*
@@ -10,17 +9,17 @@ import korlibs.math.geom.*
 import systems.*
 
 class GameScene : Scene() {
-    private val assets = Assets()
+    private val atlasLoader = AtlasLoader()
     override suspend fun SContainer.sceneInit() {
         // load assets here and inject them into the world in the injectables section inside the world down below
         // create a config for all assets that have to be loaded
-        val config = Assets.Config(
+        val config = AtlasLoader.Config(
             images = listOf(
                 Pair("Firebug", "Firebug.json")
             )
         )
         //load assets with config
-        assets.load(config)
+        atlasLoader.load(config)
     }
 
     override suspend fun SContainer.sceneMain() {
@@ -34,7 +33,7 @@ class GameScene : Scene() {
             val world = configureWorld(entityCapacity = 512) {
                 // Register external objects which are used by systems and component listeners
                 injectables {
-                    add(assets)
+                    add(atlasLoader)
                     add("playground", playground)
                 }
 
